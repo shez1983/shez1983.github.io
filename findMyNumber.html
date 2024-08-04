@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game - Find my number</title>
+    <script>
+        let tries = 5;
+        let numberToGuess = 0;
+
+        function show(element) {
+            let selectedElement = document.getElementById(element)
+            selectedElement.classList.add("show");
+            selectedElement.classList.remove("hide");
+        }
+
+        function hide(element) {
+            let selectedElement = document.getElementById(element)
+            selectedElement.classList.add("hide");
+            selectedElement.classList.remove("show");
+        }
+
+        function startGame(){
+            tries = 5;
+            numberToGuess = parseInt(Math.random() * 100);
+
+            show('game');            
+            hide('startButton');
+            hide('endGameResult');
+            hide('won');
+            hide('lost');
+        }
+
+        function endGame(result) {
+            hide('game');
+            show('endGameResult');
+            show(result);
+        }
+
+        function makeAGuess() {
+            tries -= 1;
+            let guess = parseInt(document.getElementById('guess').value);
+
+            if (guess == numberToGuess) {
+                endGame("won")
+                return;
+            }
+
+            if (tries == 0) {
+                endGame("lost");
+                return;
+            }
+
+            let result = "";
+            if (guess > numberToGuess) {
+                result = 'high';
+            } else {
+                result = 'low';
+            }
+
+            let near = Math.abs(numberToGuess - guess) <= 5 ? true : false;
+
+            let res
+
+            document.getElementById('result').innerHTML = "your number is " + result + "er than the number to guess<br/>";
+
+            if (near) {
+                document.getElementById('result').innerHTML += 'You are very near!<br/>';
+            }
+
+            document.getElementById('result').innerHTML +=  "You now have " + tries + " tries"
+
+            console.log("Number to guess:", numberToGuess)
+        }
+    </script>
+
+    <style>
+        .show {
+            display: block;
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Find my number!</h1>
+
+    <h2>Rules</h2>
+    <p>Simple game, where you try to guess the number that I am thinking.</p>
+    <p>its a number between 1 and 100, and everytime you guess, i will tell you if its high or low</p>
+    <p>You only have 5 tries to get the number or you lose</p>
+
+    <input type="button" id="startButton" value="Start" onclick="startGame()">
+
+    <div id="game" class="hide">
+        <label>Enter your guess</label>
+        <input type="number" id="guess" name="guess" min="1" max="100" value="0"/>
+        <input type="button" value="guess" onclick="makeAGuess()">
+
+        <!-- // result should have high, low, near AND how many tries left. -->
+        <div id="result"></div>
+
+        <input type="button" id="reset" name="reset" value="Reset" onclick="reset()">
+    </div>
+
+    <div id="endGameResult" class="hide">
+        <div id="won" class="hide">You won!</div>
+        <div id="lost" class="hide">You lost!</div>
+
+        <input type="button" id="reset" name="reset" value="Try again?" onclick="startGame()"
+        >
+    </div>
+
+</body>
+</html>

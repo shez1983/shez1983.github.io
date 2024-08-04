@@ -6,10 +6,59 @@
     <title>Shez Site - About me</title>
 </head>
 <body>
-    <h1>Hello world!</h1>
+    <header>
+        <div>
+            Shez's Webpage
+        </div>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#about">Why Frontend?</a>
+            <a href="about.html">Contact</a>
+            <a href="findMyNumber.html">Find my number</a>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2 id="about">About me</h2>
 
-    <p>Just testing first to see how it looks.</p>
+            I am already a backend programmer with 10 years experience. but frontend has been my achiles heel.
+            I know some CSS, and JS
+        </section>
 
-    <a href="anotherpage.html">another page</a>
+        <section>
+            <h2 id="about">Why frontend?</h2>
+
+            This website is to showcase why I am interested in the course.
+            <ul>
+                <li>To learn frontend</li>
+                <li>To become better at Javascript</li>
+                <li>To become better at CSS frameworks (Tailwind etc)</li>
+                <li>To network</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 id="contact">Contact</h2>
+
+            <form action="">
+                <div>
+                    <label for="name">Name</label>
+                    <input id="name" required/>
+                </div>
+
+                <div>
+                    <label for="message">Message</label>
+                    <textarea id="message" required></textarea>
+                </div>
+
+                <div>
+                    <input type="submit" value="Send Message"/>
+                </div>
+            </form>
+        </section>
+    </main>
+    <footer>
+        &copy;2024 - Thanks for visiting my site
+    </footer>
 </body>
 </html>
