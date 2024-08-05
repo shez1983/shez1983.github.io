@@ -1,0 +1,337 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game - Find my number</title>
+    <script>
+        let tries = 8;
+        let wordToGuess = "";
+        let displayWord = []; //["_", "_", "_", "_", "_", "_", "_", "_", "_"];
+        let previousGuesses = [];
+
+        function show(element) {
+            let selectedElement = document.getElementById(element)
+            selectedElement.classList.add("show");
+            selectedElement.classList.remove("hide");
+
+            return selectedElement;
+        }
+
+        function hide(element) {
+            let selectedElement = document.getElementById(element)
+            selectedElement.classList.add("hide");
+            selectedElement.classList.remove("show");
+        }
+        
+        async function getData() {
+            const url = "https://random-word-api.herokuapp.com/word";
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                const json = await response.json();
+                return json[0];
+            } catch (error) {
+                let backupList = [
+                    'ocypodoid',
+                    'unafflictedly',
+                    'postpone',
+                    'boskier',
+                    'pastorals',
+                    'moksha',
+                    'upsup',
+                    'swandown',
+                    'tollmen',
+                    'coincidence',
+                    'wastingness',
+                    'unproductively',
+                    'receptant',
+                    'repealers',
+                    'semipsychotic',
+                    'bedquilt',
+                    'holdership',
+                    'turtling',
+                    'urchins',
+                    'smaller',
+                    'ternes',
+                    'anatomicopathological',
+                    'monolayer',
+                    'jacconet',
+                    'basketball',
+                    'cionocranial',
+                    'anarchosyndicalist',
+                    'evirate',
+                    'stepbrother',
+                    'comether',
+                    'triunity',
+                    'seawall',
+                    'bullnut',
+                    'slagman',
+                    'elayl',
+                    'volcanologize',
+                    'ichthyophagi',
+                    'amidosuccinamic',
+                    'parousia',
+                    'proseity',
+                    'greillade',
+                    'podsolic',
+                    'goldarn',
+                    'scarriest',
+                    'braidism',
+                    'physiqued',
+                    'reprosecute',
+                    'synopsising',
+                    'hydroglider',
+                    'tautologicalness',
+                    'buckpot',
+                    'aspidate',
+                    'conversazioni',
+                    'oophoridia',
+                    'temporals',
+                    'unresistable',
+                    'unconfusing',
+                    'peshwa',
+                    'chlamydophore',
+                    'fisticuff',
+                    'brustle',
+                    'filaze',
+                    'manlihood',
+                    'microbeam',
+                    'massicotite',
+                    'eupittonic',
+                    'existently',
+                    'reluctate',
+                    'sweep',
+                    'olympianism',
+                    'unexonerable',
+                    'exhibit',
+                    'vacuously',
+                    'fumitory',
+                    'achterveld',
+                    'unsprouted',
+                    'baywoods',
+                    'clodded',
+                    'unpublishable',
+                    'unkinged',
+                    'gastrocolic',
+                    'nonprosecution',
+                    'unpossessed',
+                    'transcriptural',
+                    'suburbican',
+                    'smock',
+                    'underearth',
+                    'matzoons',
+                    'bearably',
+                    'procello',
+                    'nonventilative',
+                    'scalable',
+                    'structed',
+                    'chickenwort',
+                    'ingotman',
+                    'staumrel',
+                    'atheriogaean',
+                    'metalammonium',
+                    'manager',
+                    'rammiest',
+                    'arthra',
+                    'bicylindrical',
+                    'stump',
+                    'booklouse',
+                    'escobita',
+                    'refractivities',
+                    'baldest',
+                    'serting',
+                    'plying',
+                    'unmaterialistically',
+                    'morselize',
+                    'dyvours',
+                    'jumble',
+                    'glossopharyngeal',
+                    'nonastonishment',
+                    'boudoirs',
+                    'wooers',
+                    'sakyamuni',
+                    'suppuratory',
+                    'hcl',
+                    'awarding',
+                    'uncandor',
+                    'timeworn',
+                    'cussword',
+                    'wjc',
+                    'importability',
+                    'augustinian',
+                    'ichthyosism',
+                    'tommer',
+                    'vasodentinal',
+                    'impolitical',
+                    'wishoskan',
+                    'intrado',
+                    'decorator',
+                    'subserous',
+                    'wheels',
+                    'portlight',
+                    'recostuming',
+                    'standbybys',
+                    'illiquation',
+                    'cornerwise',
+                    'nonhydrophobic',
+                    'musicologies',
+                    'manustupration',
+                    'phosgene',
+                    'angletouch',
+                    'eccyclema',
+                    'inspissating',
+                    'rimrock',
+                    'prepg',
+                    'hallroom',
+                    'seringhi',
+                    'pathonomy',
+                    'courbash',
+                    'venice',
+                    'openable',
+                    'explosives',
+                    'outrogued',
+                    'hippidae',
+                    'sedulous',
+                    'endolysin',
+                    'cockbills',
+                    'pyrocitric',
+                    'chamber',
+                    'boxy',
+                    'beauxite',
+                    'marketwise',
+                    'nonadaptability',
+                    'neurenteric',
+                    'brierroot',
+                    'nonconsideration',
+                    'spermatogemma',
+                    'logistician',
+                    'aphagias',
+                    'dries',
+                    'repository',
+                    'unreconnoitered',
+                    'altar',
+                ];
+                let randomWord = backupList[Math.floor(Math.random() * backupList.length)];
+                return randomWord;
+            }
+        }
+
+        async function startGame(){
+            tries = 8;
+            previousGuesses = [];
+            wordToGuess = await getData();
+
+            console.log('word', wordToGuess);
+            displayWord = wordToGuess.split("").fill("_");
+
+            show('game');            
+            hide('startButton');
+            hide('endGameResult');
+            hide('won');
+            hide('lost');
+            hide('previousGuesses');
+            hide('hangman');
+
+            let wordToGuessDiv = document.getElementById('wordToGuess');
+            wordToGuessDiv.innerHTML = displayWord.join(" ");
+        }
+
+        function endGame(result) {
+            hide('game');
+            show('endGameResult');
+            show(result);
+            selectedElement = show('tellTheWord');
+            selectedElement.innerHTML = "The WORD WAS " + wordToGuess;
+        }
+
+        function makeAGuess() {
+            let guess = document.getElementById('guess').value;
+            show('previousGuesses');
+
+            if (previousGuesses.includes(guess)) {
+                return;
+            }
+
+            previousGuesses = [...previousGuesses, guess];
+
+            array = wordToGuess.split("");
+            count = 0;
+            for (let i = 0; i < array.length; i++) {
+                let pattern = new RegExp(guess, "i");
+                if ( (pattern.test(array[i]) ) ) {
+                    displayWord[i] = guess;
+                    count++;
+                }
+            }
+
+            if (count == 0) {
+                --tries;
+                show('hangman');
+            } 
+
+            let wordToGuessDiv = document.getElementById('wordToGuess');
+            wordToGuessDiv.innerHTML = displayWord.join(" ");
+
+            let previousGuessesDiv = document.getElementById('previousGuesses');
+            previousGuessesDiv.innerHTML = previousGuesses.join(",");
+
+            let hangmanDiv = document.getElementById('hangman');
+            hangmanDiv.innerHTML = "<img style='width:25%' src='images/hangman/" + tries + ".png'/>;"
+
+            if (tries === 0) {
+                endGame("lost");
+            }
+
+            if (displayWord.indexOf("_") == -1) {
+                endGame("won");
+            }
+        }
+    </script>
+
+    <style>
+        .show {
+            display: block;
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hangman</h1>
+
+    <h2>Rules</h2>
+    <p>Classic game where you have to guess the word.</p>
+
+    <input type="button" id="startButton" value="Start" onclick="startGame()">
+
+    <div id="game" class="hide">
+        <div id="wordToGuess"></div>
+
+        <label>Enter your guess</label>
+        <input type="text" id="guess" name="guess" pattern="/[A-Za-z]/" size="1" maxlength="1" minlength="1"/>
+        <input type="button" value="guess" onclick="makeAGuess()">
+
+        <!-- // result should have high, low, near AND how many tries left. -->
+        <div id="previousGuesses"></div>
+        <div id="hangman"></div>
+
+        <input type="button" id="reset" name="reset" value="Reset" onclick="reset()">
+    </div>
+
+    <div id="endGameResult" class="hide">
+        <div id="won" class="hide">You won!</div>
+        <div id="lost" class="hide">You lost!</div>
+        <div id="tellTheWord" class="hide"></div>
+
+        <input type="button" id="reset" name="reset" value="Try again?" onclick="startGame()"
+        >
+    </div>
+</body>
+</html>
