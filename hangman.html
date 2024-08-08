@@ -6,9 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game - Find my number</title>
     <script>
-        let tries = 8;
+        const MAX_LIVES = 8;
+        let tries = MAX_LIVES;
         let wordToGuess = "";
-        let displayWord = []; //["_", "_", "_", "_", "_", "_", "_", "_", "_"];
+        let displayWord = [];
         let previousGuesses = [];
 
         function show(element) {
@@ -222,7 +223,7 @@
         }
 
         async function startGame(){
-            tries = 8;
+            tries = MAX_LIVES;
             previousGuesses = [];
             wordToGuess = await getData();
 
@@ -249,16 +250,7 @@
             selectedElement.innerHTML = "The WORD WAS " + wordToGuess;
         }
 
-        function makeAGuess() {
-            let guess = document.getElementById('guess').value;
-            show('previousGuesses');
-
-            if (previousGuesses.includes(guess)) {
-                return;
-            }
-
-            previousGuesses = [...previousGuesses, guess];
-
+        function isGuessCorrect(guess) {
             array = wordToGuess.split("");
             count = 0;
             for (let i = 0; i < array.length; i++) {
@@ -269,19 +261,47 @@
                 }
             }
 
-            if (count == 0) {
+            return count > 0;
+        }
+
+        function isGuessValid(guess) {
+            validationDiv = document.getElementById('validation');
+            validationDiv.innerHTML = "";
+
+            const regex = new RegExp('[A-Za-z]');
+            
+            if (regex.test(guess)) {
+                return true;
+            }
+            
+            validationDiv.innerHTML = "Only alphabets please!";
+            return false;
+        }
+
+        function makeAGuess() {
+            let guess = document.getElementById('guess').value;
+           
+            if (! isGuessValid(guess)) {
+                return;
+            }
+
+            show('previousGuesses');
+
+            if (previousGuesses.includes(guess)) {
+                return;
+            }
+
+            previousGuesses = [...previousGuesses, guess];
+
+            if (! isGuessCorrect(guess)) {
                 --tries;
-                show('hangman');
             } 
 
-            let wordToGuessDiv = document.getElementById('wordToGuess');
-            wordToGuessDiv.innerHTML = displayWord.join(" ");
+            if (tries < MAX_LIVES) {
+                show('hangman');
+            }
 
-            let previousGuessesDiv = document.getElementById('previousGuesses');
-            previousGuessesDiv.innerHTML = previousGuesses.join(",");
-
-            let hangmanDiv = document.getElementById('hangman');
-            hangmanDiv.innerHTML = "<img style='width:25%' src='images/hangman/" + tries + ".png'/>;"
+            updateDisplay();
 
             if (tries === 0) {
                 endGame("lost");
@@ -291,9 +311,30 @@
                 endGame("won");
             }
         }
+
+        function updateDisplay() {
+            let wordToGuessDiv = document.getElementById('wordToGuess');
+            wordToGuessDiv.innerHTML = displayWord.join(" ");
+
+            let previousGuessesDiv = document.getElementById('previousGuesses');
+            previousGuessesDiv.innerHTML = "<h2>Previous guesses:</h2>" + previousGuesses.join(", ");
+
+            let hangmanDiv = document.getElementById('hangman');
+            hangmanDiv.innerHTML = "<img style='width:25%' src='images/hangman/" + tries + ".png'/>"
+        }
+
     </script>
 
     <style>
+
+        body {
+            width: 50%;
+            margin: 5em auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
         .show {
             display: block;
         }
@@ -301,6 +342,45 @@
         .hide {
             display: none;
         }
+
+        #startButton {
+            width: 100%;
+           
+        }
+
+        #wordToGuess {
+            word-spacing: 1px;
+            font-size: 5em;
+            text-align: center;
+        }
+
+        #ui {
+            width:40%;
+            float:left;
+        }
+
+        #hangman {
+            float: right;
+            /* min-height:  */
+        }
+
+        #validation {
+            font-size: smaller;
+            color: red;
+        }
+
+        input[type='button'] {
+            background: black;
+            color: white;
+            padding: 0.5em;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        /* #previousGuesses h2 {
+            font-size: ;
+        } */
     </style>
 </head>
 <body>
@@ -308,21 +388,25 @@
 
     <h2>Rules</h2>
     <p>Classic game where you have to guess the word.</p>
+    <p>you only have 8 lives</p>
+    <p>no double baralled words or words with spaces or - etc</p>
 
     <input type="button" id="startButton" value="Start" onclick="startGame()">
-
     <div id="game" class="hide">
         <div id="wordToGuess"></div>
 
-        <label>Enter your guess</label>
-        <input type="text" id="guess" name="guess" pattern="/[A-Za-z]/" size="1" maxlength="1" minlength="1"/>
-        <input type="button" value="guess" onclick="makeAGuess()">
+            <div id="ui">
+                <div>
+                    <label>Enter your guess</label>
+                    <input type="text" id="guess" name="guess" size="1" maxlength="1" minlength="1" />
+                    <div id="validation"></div>
+                </div>
+                <input type="button" value="guess" onclick="makeAGuess()">
 
-        <!-- // result should have high, low, near AND how many tries left. -->
-        <div id="previousGuesses"></div>
-        <div id="hangman"></div>
+                <div id="previousGuesses"></div>
+            </div>
 
-        <input type="button" id="reset" name="reset" value="Reset" onclick="reset()">
+            <div id="hangman"></div>
     </div>
 
     <div id="endGameResult" class="hide">
