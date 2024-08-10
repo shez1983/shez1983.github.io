@@ -4,6 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shez Site - About me</title>
+
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: black;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5em;
+            position: fixed;
+            width: 100%;
+        }
+
+        header a {
+            color: white;
+        }
+
+        section {
+            height: 100vh;
+            margin-top:1em;
+        }
+
+        section h2 {
+            background-color: bisque;
+            text-align: center;
+            padding: 1em;
+            text-transform: uppercase;
+        }
+
+        #games {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-content: space-between;
+            column-gap: 3em;
+        }
+
+        #games div {
+            border: 1px solid burlywood;
+            border-radius: 25px;
+            padding: 5em;
+            text-align: center;        
+        }
+
+        #games a {
+            text-decoration: none;
+        }
+
+        #games a:hover {
+            background: burlywood;
+            border-radius: 25px;
+            color: white;
+            margin-top:0em;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -12,8 +70,8 @@
         </div>
         <nav>
             <a href="#about">About</a>
-            <a href="#about">Why Frontend?</a>
-            <a href="about.html">Contact</a>
+            <a href="#bootcamp">Why this bootcamp?</a>
+            <a href="#contact.html">Contact</a>
             <a href="findMyNumber.html">Find my number</a>
             <a href="hangman.html">Hangman</a>
         </nav>
@@ -22,40 +80,64 @@
         <section>
             <h2 id="about">About me</h2>
 
-            I am already a backend programmer with 10 years experience. but frontend has been my achiles heel.
-            I know some CSS, and JS
+            <div class="info">
+                <p>
+                    I am already a backend programmer with 10 years experience. but frontend has been my achiles heel so I would like to learn more and get better 
+                    I know some CSS, and JS including Vue JS.
+                </p>
+
+                <p>Please see some of my games:</p>
+
+                <div id="games">
+                    <a href="">
+                        <div id="hangman">
+                            Hangman
+                        </div>
+                    </a>
+
+                    <a href="">
+                        <div id="guess">
+                            Guess my number
+                        </div>
+                    </a>
+                </div>
+            </div>
         </section>
 
         <section>
-            <h2 id="about">Why frontend?</h2>
+            <h2 id="bootcamp">Why this bootcamp?</h2>
 
-            This website is to showcase why I am interested in the course.
-            <ul>
-                <li>To learn frontend</li>
-                <li>To become better at Javascript</li>
-                <li>To become better at CSS frameworks (Tailwind etc)</li>
-                <li>To network</li>
-            </ul>
+            <div class="info">
+                <ul>
+                    <li>To become better at Javascript</li>
+                    <li>To become better at CSS frameworks (Tailwind etc)</li>
+                    <li>To network</li>
+                    <li>To become fullstack and maybe get a job in frontend/JS</li>
+                    <li>to better myself, expand my skills etc</li>
+                </ul>
+            </div>
         </section>
 
         <section>
             <h2 id="contact">Contact</h2>
 
-            <form action="">
-                <div>
-                    <label for="name">Name</label>
-                    <input id="name" required/>
-                </div>
+            <div>
+                <form action="">
+                    <div>
+                        <label for="name">Name</label>
+                        <input id="name" required/>
+                    </div>
 
-                <div>
-                    <label for="message">Message</label>
-                    <textarea id="message" required></textarea>
-                </div>
+                    <div>
+                        <label for="message">Message</label>
+                        <textarea id="message" required></textarea>
+                    </div>
 
-                <div>
-                    <input type="submit" value="Send Message"/>
-                </div>
-            </form>
+                    <div>
+                        <input type="submit" value="Send Message"/>
+                    </div>
+                </form>
+            </div>    
         </section>
     </main>
     <footer>
